@@ -212,7 +212,7 @@ function getCurT() {
 	return([curH,curM,amPm]);
 }
 function radar() {
-	$('#map').append('<div id="legend"><span id="labelTop"><p id="light">Light</p><p id="heavy">Heavy</p></span><img src="rain-legend.png" alt="rain scale" id="rain"></img><img src="snow-legend.png" alt="snow scale" id="snow"></img></div>')
+	$('#map').append('<div id="legend"><span id="labelTop"><p id="light">Light</p><p id="heavy">Heavy</p></span><img src="https://raw.githubusercontent.com/willwalker753/API-capstone-MVP/master/rain-legend.png" alt="rain scale" id="rain"></img><img src="https://github.com/willwalker753/API-capstone-MVP/blob/master/snow-legend.png?raw=true" alt="snow scale" id="snow"></img></div>')
 	let lonLat = [lon,lat];
 	var map = new ol.Map({
     target: 'map',
