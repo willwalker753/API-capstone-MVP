@@ -226,7 +226,7 @@ function radar() {
       zoom: zoom
     })
   });	
-	urlRadar=`https://tilecache.rainviewer.com/v2/radar/${unixT}/512/${zoom}/${lat}/${lon}/4/0_1.png`;
+	urlRadar=`https://tilecache.rainviewer.com/v2/radar/${unixT}/512/${zoom}/${lat}/${lon}/4/1_1.png`;
 	$('#map').append(`<div id="radarOverlay"><img src="${urlRadar}" id="radarImg" alt="radar overlay"></img></div>`);
 	radarInput();
 }
