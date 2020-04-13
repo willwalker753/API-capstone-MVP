@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>allWeather</title>
+    <link href="weather.css" rel="stylesheet" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+		<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+		<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.3.1/build/ol.js"></script>
+    <script src="weather.js"></script> 
+  </head>
+  <body>
+    <header>
+        <h1 id="allWeather"><a href="/index.html">allWeather</a></h1>
+    </header>
+    <div id="location"></div>
+		<section id="mobile">
+			<section id="buttons"></section>
+			<section id="weatherData"></section>
+			<div id="map" class="map"></div>
+			<section id="radarControls">
+				<div id="sliderBox"></div>
+				<div id="timeForward"></div>
+				<div id="zoomButtons"></div>
+			</section>
+		</section>
+  </body>
+</html>

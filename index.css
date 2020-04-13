@@ -1,0 +1,51 @@
+a, h1, li, p {
+  font-family: sans-serif;
+  color:black;
+}
+form > a > img {
+  height:20px;
+
+}
+
+li {
+  list-style-type: none;
+}
+li > img {
+  height:50px;
+}
+h1, a {
+  text-decoration:none;
+  color: rgb(54, 107, 255);
+  font-weight: bold;
+  font-size: 20px;
+}
+form {
+  text-align:center;
+}
+#weatherTypes > ul {
+  display: flex;
+  justify-content:space-around;
+  padding:0px;
+}
+#weatherTypes > ul > li  {
+  text-align: center;
+}
+/*
+body {
+    background-image: url("https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzkCKhbhkhYUxL55cS-99GMsbOwsrXF2qiO5pYEq-6oGyigUAC&usqp=CAU");
+    background-repeat: no-repeat;
+    background-size: 90vw;
+    background-position: center;
+  }
+*/
+
+@media only screen and (min-width:700px) {
+	/*
+  body {
+    background-image: url("https://www.pngmart.com/files/7/Abstract-World-Map-Transparent-Background.png");
+  }
+	*/
+  li > img {
+  height:50px;
+  }
+}

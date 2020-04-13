@@ -1,0 +1,164 @@
+* {
+	font-family: sans-serif;
+}
+li {
+  list-style-type:none;
+}
+header > h1 > a {
+  text-decoration:none;
+  color: rgb(54, 107, 255);
+  font-weight: bold;
+  font-size: 25px;
+}
+.map > .ol-viewport > .ol-overlaycontainer-stopevent {
+	display: none;
+}
+#buttons {
+  display: flex;
+  justify-content: space-around;
+}
+h3, h4, h5, h6, #location {
+    text-transform: capitalize;   
+}
+#curMobBot {
+	display: flex;
+	justify-content: space-around;
+}
+#curMobBot > img {
+	width: 150px;
+	height:150px;
+}
+#curMobBot > div > h1 {
+	text-transform: capitalize;
+}
+sup {
+	position: relative;
+	top: 2px;
+	font-size: .65em;
+}
+.map {
+	height: 256px;
+	width: 256px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.ol-overlaycontainer, canvas, #radarImg {
+	width:256px;
+	height:256px;
+}
+.ol-zoom-out, .ol-zoom-in, .ol-rotate-reset {
+	visibility: hidden;
+}
+#radarImg {
+	position: relative;
+	bottom: 256px;
+}
+#radarControls {
+	position: relative;
+	top: 60px;
+}
+#radarControls {
+	display: flex;
+	align-content: center;
+	justify-content: space-around;
+}
+#timeForward > p {
+	margin:0px;
+}
+#labelTop {
+	font-size: 13px;
+	display: flex;
+	justify-content: space-between;
+}
+#legend > img {
+	width: 256px;
+	height: 8px;
+}
+#legend {
+	height:53px;
+	
+}
+#rain {
+	position:relative;
+	bottom:16px;
+}
+#snow {
+	position:relative;
+	bottom:20px;
+	padding-bottom: 5px;
+}
+
+@media only screen and (min-width:700px) {
+#sixtDaySec, #sevDaySec {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+}
+#sixtDaySec > div, #sevDaySec > div{
+	text-align: center;
+	margin-right: 10px;
+}
+#sixtDaySec > div > img, #sevDaySec > div > img {
+	height: 50px;
+}
+	#sevDayBox > div {
+		text-align: center;
+	}
+	#sevDayBox > div > img {
+		height: 50px;
+	}
+	
+#topRow {
+	width:80%;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	justify-content: space-evenly;
+}
+#bottomRow {
+	width:80%;
+	display: flex;
+	margin-left: auto;
+	margin-right: auto;
+	justify-content: space-around;
+	align-items: center;
+}
+#sevDayBox {
+	width: 120%;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	justify-content: space-evenly;
+}
+#desktopAll {
+	position: relative;
+	bottom: 80px;
+}
+#sixtDayPage {
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	flex-wrap: wrap;
+}
+#sixtDayPage > div {
+	margin-right: 20px;
+}
+#sixtDayPage > div > p {
+	text-align: center;
+}
+#sixtDayPage > div > img {
+	margin-left: auto;
+	margin-right: auto;
+}
+#sixtDayButtonBack {
+	position: relative;
+	right: 30px;
+	height:250px;
+}
+#sixtDayButton {
+	height: 160px;
+}
+}
