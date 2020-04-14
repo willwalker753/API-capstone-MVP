@@ -36,6 +36,21 @@ sup {
 	top: 2px;
 	font-size: .65em;
 }
+#curSliderLabels, #curSliderTicks {
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+	bottom: 15px;
+	width:80%;
+	height: 1px;
+	display: flex;
+	justify-content: space-between;
+	user-select: none;
+}
+#curSliderLabels {
+	top:3px;
+	width:90%;
+}
 .map {
 	height: 256px;
 	width: 256px;
@@ -87,8 +102,97 @@ sup {
 	bottom:20px;
 	padding-bottom: 5px;
 }
-
+#weatherData > #sixtDaySec, #weatherData > #sevDaySec {
+	margin-left: auto;
+	margin-right: auto;
+	display: flex;
+	justify-content: space-evenly;
+	flex-wrap: wrap;
+}
+#curSlider {
+	-webkit-appearance: none;
+	background: rgb(230, 230, 230);
+	outline: none;
+	border-radius: 5px;
+	width: 83%;
+	margin-right: auto;
+	margin-left: auto;
+	height:10px;
+}
+#curSlider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+  appearance: none;
+	background: rgb(54, 107, 255);
+	height:20px;
+	width: 20px;
+	cursor: pointer;
+	border-radius: 5px;
+}
+#curSlider::-moz-range-thumb {
+	background: rgb(54, 107, 255);
+	height:20px;
+	width: 20px;
+	cursor: pointer;
+	border-radius: 50px;
+}
+#curSliderBox {
+	display:flex;
+	flex-direction: column;
+	height: 70px;
+}
+.colorTick {
+	color:rgb(54, 107, 255);
+	font-weight: bold;
+}
+#slider {
+	-webkit-appearance: none;
+	background: rgb(230, 230, 230);
+	outline: none;
+	border-radius: 5px;
+	margin-right: auto;
+	margin-left: auto;
+	height:8px;
+}
+#slider::-webkit-slider-thumb {
+	-webkit-appearance: none;
+  appearance: none;
+	background: rgb(54, 107, 255);
+	height:15px;
+	width: 15px;
+	cursor: pointer;
+	border-radius: 3px;
+}
+#slider::-moz-range-thumb {
+	background: rgb(54, 107, 255);
+	height:15px;
+	width: 15px;
+	cursor: pointer;
+	border-radius: 3px;
+}
 @media only screen and (min-width:700px) {
+#currentBox {
+	display:flex;
+	flex-direction: column;
+	align-content: center;
+}
+#currentBoxBottom{
+	height: fit-content;
+	width:fit-content;
+}
+
+#curSliderLabels{
+	width:385px;
+} 
+#curSliderTicks {
+	width:345px;
+}
+#curSlider {
+	width: 360px;
+}
+#currentBoxTop {
+	display:flex;
+	justify-content: space-around;
+}
 #sixtDaySec, #sevDaySec {
 	display: flex;
 	flex-wrap: wrap;
@@ -114,6 +218,8 @@ sup {
 	margin-right: auto;
 	display: flex;
 	justify-content: space-evenly;
+	margin-bottom: 70px;
+	align-items: center;
 }
 #bottomRow {
 	width:80%;
@@ -133,6 +239,9 @@ sup {
 #desktopAll {
 	position: relative;
 	bottom: 80px;
+}
+#curImgDeskDiv {
+	height: 120px;
 }
 #sixtDayPage {
 	width: 90%;

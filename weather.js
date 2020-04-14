@@ -1,7 +1,8 @@
-let city = sessionStorage.getItem("city");
-let state = sessionStorage.getItem("state");
+let city = localStorage.getItem("city");
+let state = localStorage.getItem("state");
 let lat;
 let lon;
+let width;
 let val;
 let unixT;
 let curT;
@@ -13,8 +14,9 @@ let apiKeyOWM = '223038d0133a55f5d7ecd1ddaa9ea615';
 let apiKeyWB = '7967810f24274d6e90166af4803705e6';
 let countR = 0;
 
+
 function weather() {
-  let citySt = sessionStorage.getItem("citySt");
+  let citySt = localStorage.getItem("citySt");
   $('#location').append(`<p id="location">${citySt}</p>`)
   $(latLon);
 }
@@ -38,22 +40,32 @@ function saveLatLon(responseJson) {
 	findWidth();
 }
 function findWidth() {
-	let width = $(document).width();
-	if(width<700) {
+	width = $(document).width();
+	let newWidth = null;
+	if(width < 700) {
 		desktopSize = false;
 		$('#buttons').append('<button id="current">Current Weather</button><button id="7Day">7 Day Forecast</button><button id="radar">Weather Radar</button><button id="16Day">16 day Forecast</button>');
 		weatherSelect();
 	}
-	else {
+	if(width >= 700) {
 		desktopSize = true;
 		$('#buttons').empty();
 		$('body').append('<div id="desktopAll"></div><div id="sixtDayPage"></div>');
 		desktopDisplay();
 	}
+	$(window).resize(function() {
+		newWidth = $(document).width();
+		if((width >= 700)&&(newWidth<700)) {
+			findWidth();
+		}
+		else if((width < 700)&&(newWidth >= 700)) {
+			findWidth();
+		}
+	});
 }
 function desktopDisplay() {
 	$('#mobile').remove();
-	$('#desktopAll').append('<section id="topRow"><div id="currentBox"></div><div id="radarBox"><div id="map" class="map"></div><section id="radarControls"><div id="sliderBox"></div><div id="timeForward"></div><div id="zoomButtons"></div></section></div></section><section id="bottomRow"><div id="sevDayBox"></div><div id="sixtDayBox"><button id="sixtDayButton">Show more</button></div></section>');
+	$('#desktopAll').append('<section id="topRow"><div id="currentBox"><div id="currentBoxTop"></div><div id="currentBoxBottom"></div></div><div id="radarBox"><div id="map" class="map"></div><section id="radarControls"><div id="sliderBox"></div><div id="timeForward"></div><div id="zoomButtons"></div></section></div></section><section id="bottomRow"><div id="sevDayBox"></div><div id="sixtDayBox"><button id="sixtDayButton">Show more</button></div></section>');
 	currentWeather();
 	radarTimes();
 	sevDay();
@@ -87,8 +99,8 @@ function emptyMobile() {
 	$('#map').empty();
 }
 function currentWeather() {
-  let url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${state}&units=imperial&appid=${apiKeyOWM}`;
-  fetch(url)
+  url=`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOWM}`;
+	fetch(url)
   .then(response => {
     if (response.ok) {
         return response.json();
@@ -99,28 +111,89 @@ function currentWeather() {
   .catch(err => {
     console.log(err);
   });
-	if(desktopSize == false){
-		weatherSelect();
-	}
 }
 function displayCurrentWeather(responseJson) {
-	let desc = responseJson.weather[0].description;
-	let icon = convertIcon(responseJson.weather[0].icon);
-	let imgUrl = (`https://www.weatherbit.io/static/img/icons/${icon}.png`);
-	convertIcon(responseJson.weather[0].icon);
-	let currentT = round(responseJson.main.temp);
-	let feel = round(responseJson.main.feels_like);
-	let minT = round(responseJson.main.temp_min);
-	let maxT = round(responseJson.main.temp_max);
-	let hum = round(responseJson.main.humidity);
-	let wSpe = round(responseJson.wind.speed);
-	let wDir = windDirection(responseJson.wind.deg);
+	let desc = [];
+	let icon = [];
+	let imgUrl = [];
+	let currentT = [];
+	let feel = [];
+	let hum = [];
+	let wSpe = [];
+	let wDir = [];
+	let sliderHours = getSliderHours();
+	console.log(sliderHours);
+	for(i=0;i<19;i++) {
+		desc[i] = responseJson.hourly[i].weather[0].description;
+		icon[i] = convertIcon(responseJson.hourly[i].weather[0].icon);
+		imgUrl[i] = (`https://www.weatherbit.io/static/img/icons/${icon[i]}.png`);
+		currentT[i] = round(responseJson.hourly[i].temp);
+		feel[i] = round(responseJson.hourly[i].feels_like);
+		hum[i] = round(responseJson.hourly[i].humidity);
+		wSpe[i] = round(responseJson.hourly[i].wind_speed);
+		wDir[i] = windDirection(responseJson.hourly[i].wind_deg);
+	}
+	let curWeatherArr=[desc,imgUrl,currentT,feel,hum,wSpe,wDir];
+	let a = 0;
 	if(desktopSize == false) {
-		$('#weatherData').append(`<h3>${currentT}<sup>&#8457</sup></h3><section id="curMobBot"><div><h1>${desc}</h1><p>Feels like ${feel}<sup>&#176</sup><br>Min ${minT}<sup>&#176</sup><br>Max ${maxT}<sup>&#176</sup><br>Humidity ${hum}%<br>Wind ${wSpe}mph ${wDir}</p></div><img src="${imgUrl}" alt="weather icon"></section>`);
+		$('#weatherData').append(`<section id="curMobBot"><div><h3>${currentT[a]}<sup>&#8457</sup></h3><h4>${desc[a]}</h4><p>Feels like ${feel[a]}<sup>&#176</sup><br>Humidity ${hum[a]}%<br>Wind ${wSpe[a]}mph ${wDir[a]}</p></div><div><img src="${imgUrl[a]}" alt="weather icon"></div></section><section id="curSliderBox"><input type="range" min="0" max="18" value="0" class="curSlider" id="curSlider"><div id="curSliderTicks"></div><div id="curSliderLabels"></div></section>`);
 	}
 	if(desktopSize == true) {
-		$('#currentBox').append(`<h3>${desc}</h3><img src="${imgUrl}" alt="weather icon"><h1>${currentT}<sup>&#8457</sup></h1><p>Feels like ${feel}<sup>&#176</sup><br>Min ${minT}<sup>&#176</sup><br>Max ${maxT}<sup>&#176</sup><br>Humidity ${hum}%<br>Wind ${wSpe}mph ${wDir}</p>`);
+		$('#currentBoxTop').append(`<div><h1>${currentT[a]}<sup>&#8457</sup></h1><h3>${desc[a]}</h3><p>Feels like ${feel[a]}<sup>&#176</sup><br>Humidity ${hum[a]}%<br>Wind ${wSpe[a]}mph ${wDir[a]}</p></section></div><div id="curImgDeskDiv"><img src="${imgUrl[a]}" alt="weather icon"></div>`);
+		$('#currentBoxBottom').append('<section id="curSliderBox"><input type="range" min="0" max="18" value="0" class="curSlider" id="curSlider"><div id="curSliderTicks"></div><div id="curSliderLabels"></div></section></div>')
 	}
+	$('#curSliderTicks').append('<p class="colorTick">|</p>');
+	for(i=0;i<6;i++){
+		$('#curSliderTicks').append('<p>|</p>');
+		$('#curSliderTicks').append('<p>|</p>');
+		$('#curSliderTicks').append('<p class="colorTick">|</p>');
+	}
+	for(i=0;i<7;i++) {
+		$('#curSliderLabels').append(`<p>${sliderHours[i]}</p>`);
+	}
+	console.log(curWeatherArr);
+	watchCurSlider(curWeatherArr);
+}
+function watchCurSlider(curWeatherArr) {
+	let curSliderPos = 0;
+	let slider = document.getElementById("curSlider");
+	slider.oninput = function() {
+		curSliderPos = document.getElementById("curSlider").value;
+		console.log(curSliderPos);
+		
+		if(desktopSize == false) {
+		$('#curMobBot').empty();
+		$('#curMobBot').append(`<section id="curMobBot"><div><h3>${curWeatherArr[2][curSliderPos]}<sup>&#8457</sup></h3><h4>${curWeatherArr[0][curSliderPos]}</h4><p>Feels like ${curWeatherArr[3][curSliderPos]}<sup>&#176</sup><br>Humidity ${curWeatherArr[4][curSliderPos]}%<br>Wind ${curWeatherArr[5][curSliderPos]}mph ${curWeatherArr[6][curSliderPos]}</p></div><div><img src="${curWeatherArr[1][curSliderPos]}" alt="weather icon"></div></section>`);
+		}
+		if(desktopSize == true) {
+			$('#currentBoxTop').empty();
+			$('#currentBoxTop').append(`<div><h1>${curWeatherArr[2][curSliderPos]}<sup>&#8457</sup></h1><h3>${curWeatherArr[0][curSliderPos]}</h3><p>Feels like ${curWeatherArr[3][curSliderPos]}<sup>&#176</sup><br>Humidity ${curWeatherArr[4][curSliderPos]}%<br>Wind ${curWeatherArr[5][curSliderPos]}mph ${curWeatherArr[6][curSliderPos]}</p></section></div><div id="curImgDeskDiv"><img src="${curWeatherArr[1][curSliderPos]}" alt="weather icon"></div>`);
+			
+		}
+	}
+}
+function getSliderHours() {
+	let today = new Date();
+	let curH = today.getHours();
+	let nextH = [curH];
+	let newH = [curH];
+	if(newH[0] > 12) {
+				newH[0] = newH[0] - 12;
+				newH[0] = `${newH[0]}:00`;
+	}
+	for(i=1;i<7;i++){
+		if(nextH[i-1] < 10) {
+			nextH[i] = nextH[i-1] + 3;
+		}
+		else if(nextH[i-1] >= 10) {
+			nextH[i] = nextH[i-1] + 3;
+			if(nextH[i] > 12) {
+				nextH[i] = nextH[i] -12;
+			}
+		}
+		newH[i] = `${nextH[i]}:00`;
+	}
+	return newH;
 }
 function sevDay() {
 	url=`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&appid=${apiKeyOWM}`;
@@ -137,6 +210,7 @@ function sevDay() {
   });
 }
 function sevDayDisplay(responseJson) {
+	console.log(responseJson);
 	let icon = [];
 	let desc = [];
 	let imgUrl = [];
@@ -157,8 +231,9 @@ function sevDayDisplay(responseJson) {
 		}
 	}
 	if(desktopSize == true) {
+		dayNames[0] = 'Today';
 		dayNames[1] = 'Tommorow';
-		for(i=1;i<8;i++) {
+		for(i=0;i<8;i++) {
 			$(`#sevDayBox`).append(`<div><h5>${dayNames[i]}</h5><h5>${desc[i]}</h5><img src="${imgUrl[i]}" alt="weather icon"></img><p>${min[i]}<sup>&#176</sup>   ${max[i]}<sup>&#176</sup></p></div>`);
 		}
 	}
@@ -429,7 +504,6 @@ function sixtDayDates() {
 	let current = new Date();
 	let currentArr = current.toString().split(" ").slice(1,3);
 	let curMon = currentArr[0];
-	curMon = nextMonth(curMon);
 	let curDay = parseInt(currentArr[1]);
 	let dayArr = [];
 	let monArr = [];
@@ -492,76 +566,40 @@ function sixtDayDates() {
 function nextMonth(curMon) {
 	switch(curMon) {
 		case curMon = 'Jan':
-			curMon = 'January';
+			curMon = 'Feb';
 		break;
 		case curMon = 'Feb':
-			curMon = 'February';
+			curMon = 'Mar';
 		break;
 		case curMon = 'Mar':
-			curMon = 'March';
+			curMon = 'Apr';
 		break;
 		case curMon = 'Apr':
-			curMon = 'April';
-		break;
-		case curMon = 'Jun':
-			curMon = 'June';
-		break;
-		case curMon = 'Jul':
-			curMon = 'July';
-		break;
-		case curMon = 'Aug':
-			curMon = 'August';
-		break;
-		case curMon = 'Sep':
-			curMon = 'September';
-		break;
-		case curMon = 'Oct':
-			curMon = 'October';
-		break;
-		case curMon = 'Nov':
-			curMon = 'November';
-		break;
-		case curMon = 'Dec':
-			curMon = 'December';
-		break;
-		case curMon = 'December':
-			curMon = 'January';
-		break;
-		case curMon = 'January':
-			curMon = 'February';
-		break;
-		case curMon = 'February':
-			curMon = 'March';
-		break;
-		case curMon = 'March':
-			curMon = 'April';
-		break;
-		case curMon = 'April':
 			curMon = 'May';
 		break;
 		case curMon = 'May':
-			curMon = 'June';
+			curMon = 'Jun';
 		break;
-		case curMon = 'June':
-			curMon = 'July';
+		case curMon = 'Jun':
+			curMon = 'Jul';
 		break;
-		case curMon = 'July':
-			curMon = 'August';
+		case curMon = 'Jul':
+			curMon = 'Aug';
 		break;
-		case curMon = 'August':
-			curMon = 'September';
+		case curMon = 'Aug':
+			curMon = 'Sep';
 		break;
-		case curMon = 'September':
-			curMon = 'October';
+		case curMon = 'Sep':
+			curMon = 'Oct';
 		break;
-		case curMon = 'October':
-			curMon = 'November';
+		case curMon = 'Oct':
+			curMon = 'Nov';
 		break;
-		case curMon = 'November':
-			curMon = 'December';
+		case curMon = 'Nov':
+			curMon = 'Dec';
 		break;
-		case curMon = 'December':
-			curMon = 'January';
+		case curMon = 'Dec':
+			curMon = 'Jan';
 		break;
 	}
 	return curMon;
@@ -572,28 +610,28 @@ function round(num) {
 function windDirection(num) {
 	let dir = '';
 	if((num<=360)||(num<=22.5)) {
-			dir = 'North';
+			dir = 'N';
 	}
 	if((num>292.5)&&(num<=337.5)) {
-			dir = 'Northwest';
+			dir = 'NW';
 	}
 	if((num>247.5)&&(num<=292.5)) {
-			dir = 'West';
+			dir = 'W';
 	}
 	if((num>202.5)&&(num<=247.5)) {
-			dir = 'Southwest';
+			dir = 'SW';
 	}
 	if((num>157.5)&&(num<=202.5)) {
-			dir = 'South';
+			dir = 'S';
 	}
 	if((num>112.5)&&(num<=157.5)) {
-			dir = 'Southeast';
+			dir = 'SE';
 	}
 	if((num>67.5)&&(num<=112.5)) {
-			dir = 'East';
+			dir = 'E';
 	}
 	if((num>22.5)&&(num<=67.5)) {
-			dir = 'Northeast';
+			dir = 'NE';
 	}
 	return dir;
 }
@@ -618,25 +656,25 @@ function weekDays() {
 }
 function dayNumToName(i,a) {
 	if(i==0){
-		sevDayNames[a] = 'Sunday';
+		sevDayNames[a] = 'Sun';
 	}
 	if(i==1){
-		sevDayNames[a] = 'Monday';
+		sevDayNames[a] = 'Mon';
 	}
 	if(i==2){
-		sevDayNames[a] = 'Tuesday';
+		sevDayNames[a] = 'Tue';
 	}
 	if(i==3){
-		sevDayNames[a] = 'Wednesday';
+		sevDayNames[a] = 'Wed';
 	}
 	if(i==4){
-		sevDayNames[a] = 'Thursday';
+		sevDayNames[a] = 'Thu';
 	}
 	if(i==5){
-		sevDayNames[a] = 'Friday';
+		sevDayNames[a] = 'Fri';
 	}
 	if(i==6){
-		sevDayNames[a] = 'Saturday';
+		sevDayNames[a] = 'Sat';
 	}
 }
 function convertIcon (icon) {
